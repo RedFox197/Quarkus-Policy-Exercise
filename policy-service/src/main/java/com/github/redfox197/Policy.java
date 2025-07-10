@@ -11,6 +11,8 @@ public class Policy extends PanacheEntity {
     @Column(nullable = false)
     public String code;
 
+    public Long product_id;
+
     @Column(nullable = false)
     public LocalDate creationDate;
 

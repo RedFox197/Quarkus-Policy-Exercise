@@ -40,6 +40,7 @@ public class PolicyResource {
             throw new NotFoundException();
 
         policy.code = updatedPolicy.code;
+        policy.product_id = updatedPolicy.product_id;
         policy.creationDate = updatedPolicy.creationDate;
         policy.expirationDate = updatedPolicy.expirationDate;
 
