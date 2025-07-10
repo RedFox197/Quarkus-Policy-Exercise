@@ -4,8 +4,8 @@ services:
     container_name: kafka
     ports:
       - "9092:9092"
-  #    networks:
-  #      - "quarkus-policy-exercise"
+    networks:
+      - "quarkus-policy-exercise"
 
   mongodb:
     image: mongo:7
@@ -17,8 +17,8 @@ services:
       - mongodb-volume:/data/db
     ports:
       - "27017:27017"
-  #    networks:
-  #      - "quarkus-policy-exercise"
+    networks:
+      - "quarkus-policy-exercise"
 
   postgres:
     image: postgres:17
@@ -31,13 +31,54 @@ services:
       - postgres-volume:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-#    networks:
-#      - "quarkus-policy-exercise"
+    networks:
+      - "quarkus-policy-exercise"
+
+  policy-service:
+    image: policy-service:1-jvm
+    container_name: policy-service
+    build:
+      context: policy-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    depends_on:
+      - kafka
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - "quarkus-policy-exercise"
+
+  product-service:
+    image: product-service:1-jvm
+    container_name: product-service
+    build:
+      context: product-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    depends_on:
+      - kafka
+      - postgres
+    ports:
+      - "8081:8081"
+    networks:
+      - "quarkus-policy-exercise"
+
+  configuration-service:
+    image: configuration-service:1-jvm
+    container_name: configuration-service
+    build:
+      context: configuration-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    depends_on:
+      - mongodb
+    ports:
+      - "8082:8082"
+    networks:
+      - "quarkus-policy-exercise"
 
 volumes:
   postgres-volume:
   mongodb-volume:
 
-#networks:
-#  quarkus-policy-exercise:
-#    driver: bridge
+networks:
+  quarkus-policy-exercise:
+    driver: bridge
