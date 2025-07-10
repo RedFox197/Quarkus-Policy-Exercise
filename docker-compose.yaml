@@ -1,0 +1,43 @@
+services:
+  kafka:
+    image: apache/kafka:4.0.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+  #    networks:
+  #      - "quarkus-policy-exercise"
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: redfox
+      MONGO_INITDB_ROOT_PASSWORD: test
+    volumes:
+      - mongodb-volume:/data/db
+    ports:
+      - "27017:27017"
+  #    networks:
+  #      - "quarkus-policy-exercise"
+
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    environment:
+      POSTGRES_USER: redfox
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: espolicies
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+#    networks:
+#      - "quarkus-policy-exercise"
+
+volumes:
+  postgres-volume:
+  mongodb-volume:
+
+#networks:
+#  quarkus-policy-exercise:
+#    driver: bridge
