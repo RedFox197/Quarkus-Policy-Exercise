@@ -16,8 +16,10 @@ public class KafkaConsumer {
 
         Policy policy = new Policy();
         policy.code = "PO-" + product.id();
+        policy.product_id = product.id();
         policy.creationDate = date;
         policy.expirationDate = date.plusMonths(1);
+
         policy.persist();
     }
 }
