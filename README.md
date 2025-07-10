@@ -1,3 +1,7 @@
 # Build Commands
-`mvnw clean package`
-`docker compose up`
+```bash
+mvnw clean package
+```
+```bash
+docker compose up
+```
