@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import java.net.URI;
 import java.util.List;
@@ -12,10 +14,14 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ProductResource {
 
+    @Channel("policy-create")
+    public Emitter<Product> policyEmitter;
+
     @POST
     @Transactional
     public Response create(Product product) {
         product.persist();
+        policyEmitter.send(product);
         return Response.created(URI.create("/api/v1/products/" + product.id)).build();
     }
 
