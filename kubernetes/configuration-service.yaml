@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configuration-service-deployment
+  labels:
+    app: configuration-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configuration-service
+  template: #Configurazione del pod
+    metadata:
+      labels:
+        app: configuration-service
+    spec:
+      containers:
+        - name: configuration-service
+          image: docker.io/redfox197/configuration-service-jvm:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-user
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-password
+            - name: MONGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-configmap
+                  key: mongo-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configuration-service-service #endpoint rete interna
+spec:
+  selector:
+    app: configuration-service #il pod in cui inoltrare la riciesta
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8080
